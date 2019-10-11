@@ -7,67 +7,63 @@
 
 <script>
 export default {
-  data : function(){
+  data: function() {
     return {
-      pressed : false,
+      pressed: false,
     }
   },
-  props : {
-    color : {
-      type : String,
-      required : true,
+  props: {
+    color: {
+      type: String,
+      required: true,
     },
-    audioFile : {
-      type : String,
-      required : true
+    audioFile: {
+      type: String,
+      required: true
     },
-    next : {
-      type : String,
-      required : false
+    next: {
+      type: String,
+      required: false
     }
   },
-  computed : {
-    isNext : function(){
+  computed: {
+    isNext: function() {
       return this.next == this.color;
     }
   },
-  methods : {
-    getColor : function(){
+  methods: {
+    getColor: function() {
       return this.color;
     },
 
-    playSound : function(){
-        try{
-        var audio = new Audio(this.audioFile);
-        audio.play();
-        }catch(err){
+    playSound: function() {
+      console.log(this.audioFile);
+      try {
+        if(this.audioFile)
+        {
+          var audio = new Audio(this.audioFile);
+          audio.play();
+        }
+      }
+      catch (err) {
         console.log(err.message);
       }
-      },
-    flash : function(){
-      var self = this;
-      this.pressed = true ;
-      setTimeout(function(){
-        self.pressed = false;
-      },100);
     },
-    buttonPressed : function(){
-      // this.playSound();
+    flash: function() {
+      this.playSound();
+      this.pressed = true;
+      var self = this;
+      setTimeout(function() {
+        self.pressed = false;
+      }, 100);
+    },
+    buttonPressed: function() {
       this.flash();
-      this.$emit('buttonPressed',this.color);
+      this.$emit('buttonPressed', this.color);
 
     }
-    // next : function(color){
-    //   if(this.color == color){
-    //     console.log("in the function")
-    //     console.log(color);
-    //     playSound();
-    //     flash();
-    //   }
-    // }
   }
 }
-
 </script>
 
 <style lang="css" scoped>

@@ -1,6 +1,7 @@
 <template>
   <div id="app" :class="{'gameover':isGameover}">
     <h1 class="game-title" >{{title}}</h1>
+    <button type="button" name="button" @click="displayHint()">show hint</button>
     <div class="container">
       <div class="row">
         <audio-button color="#ff1" audio-file="./assets/sounds/yellow.mp3" @buttonPressed="userPressedButton($event)"></audio-button>
@@ -25,7 +26,7 @@ export default {
   },
   data: function()  {
     return{
-      title : "Press any key to start", 
+      title : "Press any key to start",
       level : 1,
       isGameStarted : false,
       gameSequence : [],
@@ -54,6 +55,8 @@ export default {
       this.buttonPressCount = -1;
       this.title = "Gameover , press any key to start again";
       this.isGameover = true;
+      var audio = new Audio("assets/sounds/wrong.mp3");
+      audio.play();
       var self = this;
       setTimeout(function(){
           self.isGameover = false;
@@ -65,12 +68,16 @@ export default {
       // console.log('game'+this.gameSequence[this.buttonPressCount]);
       // console.log('input'+this.inputSequence[this.buttonPressCount]);
       if(this.gameSequence[this.buttonPressCount] == this.inputSequence[this.buttonPressCount] ){
-        console.log(this.gameSequence.length);
-        console.log(this.buttonPressCount);
+        // console.log(this.gameSequence.length);
+        // console.log(this.buttonPressCount);
+        self = this;
          if(this.gameSequence.length-1 == this.buttonPressCount)
          {
-           console.log("next");
-           setTimeout(this.nextSequence(),1000);
+           console.log("next level "+this.level);
+           setTimeout(function(){
+             self.nextSequence();
+             //alert("next coming");
+           },500);
          }
       }
       else {
@@ -87,9 +94,26 @@ export default {
       }
       this.buttonPressCount+=1;
       this.checkButtonPressed();
-
-
     },
+    displayHint: function(){
+      console.log(this.gameSequence);
+      self = this;
+      // for(var i of this.gameSequence) {
+      //   console.log(i);
+      //   setTimeout(function(){
+      //   },500);
+      // }
+      var i = 0;
+      var l = this.gameSequence.length;
+      var temp = setInterval(function(){
+        if(i == l){
+          clearInterval(temp);
+       }else{
+         self.$children[self.gameSequence[i]].flash();
+         i++;
+       }
+     },500);
+    }
 
   },
   mounted :function(){
