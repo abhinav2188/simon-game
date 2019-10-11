@@ -1,6 +1,6 @@
 <template lang="html">
-  <div :class="{'pressed':pressed}" :style="{'background-color' :color}" class="btn" @click.prevent="flash()" >
 
+  <div :class="{'pressed':pressed}" :style="{'background-color' :color}" class="btn" @click.prevent="buttonPressed()" >
   </div>
 
 </template>
@@ -32,6 +32,10 @@ export default {
     }
   },
   methods : {
+    getColor : function(){
+      return this.color;
+    },
+
     playSound : function(){
         try{
         var audio = new Audio(this.audioFile);
@@ -41,13 +45,18 @@ export default {
       }
       },
     flash : function(){
-      this.pressed = true ;
       var self = this;
+      this.pressed = true ;
       setTimeout(function(){
         self.pressed = false;
       },100);
-      // this.playSound();
     },
+    buttonPressed : function(){
+      // this.playSound();
+      this.flash();
+      this.$emit('buttonPressed',this.color);
+
+    }
     // next : function(color){
     //   if(this.color == color){
     //     console.log("in the function")
@@ -71,26 +80,6 @@ export default {
   border-radius: 10%;
 }
 
-.game-over {
-  background-color: red;
-  opacity: 0.8;
-}
-
-.red {
-  background-color: red;
-}
-
-.green {
-  background-color: green;
-}
-
-.blue {
-  background-color: blue;
-}
-
-.yellow {
-  background-color: yellow;
-}
 .pressed {
   box-shadow: 0 0 20px black;
   /* background-color: grey; */
