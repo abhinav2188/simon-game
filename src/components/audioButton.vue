@@ -20,22 +20,9 @@ export default {
     audioFile: {
       type: String,
       required: true
-    },
-    next: {
-      type: String,
-      required: false
-    }
-  },
-  computed: {
-    isNext: function() {
-      return this.next == this.color;
     }
   },
   methods: {
-    getColor: function() {
-      return this.color;
-    },
-
     playSound: function() {
       console.log(this.audioFile);
       try {

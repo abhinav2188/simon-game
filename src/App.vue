@@ -4,7 +4,7 @@
     <button type="button" name="button" @click="displayHint()">show hint</button>
     <div class="container">
       <div class="row">
-        <audio-button color="#ff1" audio-file="./assets/sounds/yellow.mp3" @buttonPressed="userPressedButton($event)"></audio-button>
+        <audio-button color="#ff1" audio-file="../assets/sounds/yellow.mp3" @buttonPressed="userPressedButton($event)"></audio-button>
         <audio-button color="#11f" audio-file="./assets/sounds/blue.mp3" @buttonPressed="userPressedButton($event)"></audio-button>
       </div>
       <div class="row">
@@ -17,7 +17,6 @@
 
 <script>
 import audioButton from './components/audioButton.vue'
-import {eventBus} from './main.js'
 
 export default {
   name: 'app',
