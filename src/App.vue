@@ -1,15 +1,17 @@
 <template>
   <div id="app" :class="{'gameover':isGameover}">
+
     <h1 class="game-title" >{{title}}</h1>
-    <button type="button" name="button" @click="displayHint()">show hint</button>
+    <button class="btn btn-outline-primary" type="button" name="button" @click="displayHint()">show hint</button>
+
     <div class="container">
       <div class="row">
-        <audio-button color="#ff1" audio-file="../assets/sounds/yellow.mp3" @buttonPressed="userPressedButton($event)"></audio-button>
-        <audio-button color="#11f" audio-file="./assets/sounds/blue.mp3" @buttonPressed="userPressedButton($event)"></audio-button>
+        <audio-button color="#ff1" audio-file="https://actions.google.com/sounds/v1/cartoon/metal_twang.ogg" @buttonPressed="userPressedButton($event)"></audio-button>
+        <audio-button color="#11f" audio-file="https://actions.google.com/sounds/v1/cartoon/cartoon_cowbell.ogg" @buttonPressed="userPressedButton($event)"></audio-button>
       </div>
       <div class="row">
-        <audio-button color="#f11" audio-file="./assets/sounds/red.mp3" @buttonPressed="userPressedButton($event)"></audio-button>
-        <audio-button color="#1f1" audio-file="./assets/sounds/green.mp3" @buttonPressed="userPressedButton($event)"></audio-button>
+        <audio-button color="#f11" audio-file="https://actions.google.com/sounds/v1/water/air_woosh_underwater.ogg" @buttonPressed="userPressedButton($event)"></audio-button>
+        <audio-button color="#1f1" audio-file="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" @buttonPressed="userPressedButton($event)"></audio-button>
       </div>
     </div>
   </div>
@@ -35,6 +37,8 @@ export default {
     }
   },
   methods :{
+
+    // function called on each level up - nextSequence()
     nextSequence: function(){
       this.title = "Level "+this.level;
       this.level+=1;
@@ -46,6 +50,8 @@ export default {
       // console.log(this.gameSequence);
       // console.log(this.inputSequence);
     },
+
+    // gameover function()
     gameover: function(){
       this.gameSequence = [];
       this.inputSequence = [];
@@ -54,37 +60,40 @@ export default {
       this.buttonPressCount = -1;
       this.title = "Gameover , press any key to start again";
       this.isGameover = true;
-      var audio = new Audio("assets/sounds/wrong.mp3");
-      audio.play();
+
+      var audio = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
+      audio.play()
+      .catch(err =>
+        console.log("error playing audio" + err))
+
+      setTimeout(function(){
+        audio.pause();
+      },2000);
+
       var self = this;
       setTimeout(function(){
           self.isGameover = false;
-      },100);
+      },1000);
     },
+
+    //check function to validate the button pressed by the user
     checkButtonPressed :function(){
-      // console.log("checkButtonPressed");
-      // console.log(this.buttonPressCount);
-      // console.log('game'+this.gameSequence[this.buttonPressCount]);
-      // console.log('input'+this.inputSequence[this.buttonPressCount]);
       if(this.gameSequence[this.buttonPressCount] == this.inputSequence[this.buttonPressCount] ){
-        // console.log(this.gameSequence.length);
-        // console.log(this.buttonPressCount);
-        self = this;
-         if(this.gameSequence.length-1 == this.buttonPressCount)
-         {
-           console.log("next level "+this.level);
-           setTimeout(function(){
-             self.nextSequence();
-             //alert("next coming");
-           },500);
-         }
+        var self = this;
+        if(this.gameSequence.length-1 == this.buttonPressCount)
+        {
+          setTimeout(function(){
+            self.nextSequence();
+          },500);
+        }
       }
       else {
-        console.log('gameover');
         this.gameover();
       }
 
     },
+
+    // event handler function ... used to keep track of the buttons pressed by user
     userPressedButton: function(btn){
       for ( var i=0; i<this.$children.length ; i++)
       {
@@ -94,14 +103,10 @@ export default {
       this.buttonPressCount+=1;
       this.checkButtonPressed();
     },
+
+    // display the complete sequence from starting
     displayHint: function(){
-      console.log(this.gameSequence);
-      self = this;
-      // for(var i of this.gameSequence) {
-      //   console.log(i);
-      //   setTimeout(function(){
-      //   },500);
-      // }
+      var self = this;
       var i = 0;
       var l = this.gameSequence.length;
       var temp = setInterval(function(){
@@ -115,9 +120,11 @@ export default {
     }
 
   },
+
+
   mounted :function(){
     var self = this;
-    window.addEventListener('keypress',function(e){
+    window.addEventListener('keypress',function(){
       if(!self.isGameStarted){
         self.isGameStarted = true;
         self.nextSequence();
@@ -125,9 +132,13 @@ export default {
     });
   }
 }
+
+
 </script>
 
+
 <style>
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   text-align: center;
@@ -137,6 +148,10 @@ export default {
 .container{
   width: 50%;
   margin:auto ;
+  text-align: center;
+}
+.row{
+  text-align : center;
 }
 .game-title{
   font-size : 4rem;
