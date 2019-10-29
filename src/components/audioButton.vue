@@ -1,8 +1,11 @@
 <template lang="html">
 
-  <div :class="{'pressed':pressed}" :style="{'background-color' :color}" class="btn" @click.prevent="buttonPressed()" >
+<div class="col">
+  <div :class="{'pressed':pressed}" :style="{'background-color' :color}" class="audio-btn" @click.prevent="buttonPressed()" >
 
   </div>
+
+</div>
 
 </template>
 
@@ -32,8 +35,6 @@ export default {
     playSound: function() {
       var audio = new Audio(this.audioFile);
       audio.play()
-      .then( () =>
-        console.log("audio is playing"))
       .catch(err =>
         console.log("error playing audio" + err))
 
@@ -59,7 +60,7 @@ export default {
 
 <style lang="css" scoped>
 
-.btn {
+.audio-btn {
   margin: 25px;
   display: inline-block;
   height: 150px;
@@ -69,7 +70,7 @@ export default {
 }
 
 .pressed {
-  box-shadow: 0 0 20px black;
+  box-shadow: 0 0 25px white;
   /* background-color: grey; */
 }
 

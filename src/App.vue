@@ -1,21 +1,71 @@
 <template>
-  <div id="app" :class="{'gameover':isGameover}">
 
-    <h1 class="game-title" >{{title}}</h1>
-    <button class="btn btn-outline-primary" type="button" name="button" @click="displayHint()">show hint</button>
+  <div  :class="{'gameover':isGameover}" class="h-screen simon" >
 
-    <div class="container">
-      <div class="row">
-        <audio-button color="#ff1" audio-file="https://actions.google.com/sounds/v1/cartoon/metal_twang.ogg" @buttonPressed="userPressedButton($event)"></audio-button>
-        <audio-button color="#11f" audio-file="https://actions.google.com/sounds/v1/cartoon/cartoon_cowbell.ogg" @buttonPressed="userPressedButton($event)"></audio-button>
-      </div>
-      <div class="row">
-        <audio-button color="#f11" audio-file="https://actions.google.com/sounds/v1/water/air_woosh_underwater.ogg" @buttonPressed="userPressedButton($event)"></audio-button>
-        <audio-button color="#1f1" audio-file="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" @buttonPressed="userPressedButton($event)"></audio-button>
-      </div>
+    <div id="app" class="container">
+
+      <h1 class="game-title" >{{title}}</h1>
+      <button v-if="isGameStarted" class="btn border border-gray-600 rounded-lg p-2 text-sm hint-button hover:bg-white" type="button" name="button" @click="displayHint()">show hint</button>
+      <!-- <h1 v-if="!isGameover && isGameStarted" class="game-title"> Your Score :{{score}} </h1> -->
+
+      <table class="mx-auto p-8 ">
+        <tr>
+          <td>
+            <audio-button color="#ff1" audio-file="https://actions.google.com/sounds/v1/cartoon/metal_twang.ogg" @buttonPressed="userPressedButton($event)"></audio-button>
+          </td>
+          <td>
+            <audio-button color="#11f" audio-file="https://actions.google.com/sounds/v1/cartoon/cartoon_cowbell.ogg" @buttonPressed="userPressedButton($event)"></audio-button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <audio-button color="#f11" audio-file="https://actions.google.com/sounds/v1/water/air_woosh_underwater.ogg" @buttonPressed="userPressedButton($event)"></audio-button>
+          </td>
+          <td>
+            <audio-button color="#1f1" audio-file="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" @buttonPressed="userPressedButton($event)"></audio-button>
+          </td>
+        </tr>
+      </table>
+
+      <h1 v-if='isGameStarted' class="text-2xl text-white">  Score : {{score}}</h1>
+
     </div>
+
   </div>
+
 </template>
+
+
+<style>
+
+.simon{
+  background-image: linear-gradient(rgb(250,230,122),black);
+}
+#app {
+  font-family: 'VT323', monospace;
+  position:relative;
+  text-align: center;
+  color: #2c3e50;
+  padding-top: 50px;
+}
+.hint-button{
+  position: absolute;
+  right: 0;
+  top: 1rem;
+}
+.container{
+  width: 60%;
+  margin:auto ;
+}
+.game-title{
+  padding-top: 1rem;
+  font-size : 4rem;
+}
+.gameover{
+  background-color : red;
+  opacity: 0.8;
+}
+</style>
 
 <script>
 import audioButton from './components/audioButton.vue'
@@ -33,7 +83,8 @@ export default {
       gameSequence : [],
       inputSequence : [],
       buttonPressCount : -1,
-      isGameover : false
+      isGameover : false,
+      score: 0,
     }
   },
   methods :{
@@ -58,8 +109,9 @@ export default {
       this.isGameStarted = false;
       this.level = 1;
       this.buttonPressCount = -1;
-      this.title = "Gameover , press any key to start again";
+      this.title = "Gameover, press any key to start  Your Score : "+ this.score;
       this.isGameover = true;
+      this.score = 0;
 
       var audio = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
       audio.play()
@@ -68,27 +120,32 @@ export default {
 
       setTimeout(function(){
         audio.pause();
-      },2000);
+      },3000);
 
       var self = this;
       setTimeout(function(){
           self.isGameover = false;
-      },1000);
+      },100);
     },
 
     //check function to validate the button pressed by the user
     checkButtonPressed :function(){
-      if(this.gameSequence[this.buttonPressCount] == this.inputSequence[this.buttonPressCount] ){
-        var self = this;
-        if(this.gameSequence.length-1 == this.buttonPressCount)
-        {
-          setTimeout(function(){
-            self.nextSequence();
-          },500);
+      if(this.isGameStarted)
+      {
+        if(this.gameSequence[this.buttonPressCount] == this.inputSequence[this.buttonPressCount] ){
+          this.score = this.score + this.level + this.buttonPressCount;
+          var self = this;
+          if(this.gameSequence.length-1 == this.buttonPressCount)
+          {
+            setTimeout(function(){
+              self.nextSequence();
+            },500);
+          }
         }
-      }
-      else {
-        this.gameover();
+        else {
+          this.gameover();
+        }
+
       }
 
     },
@@ -135,30 +192,3 @@ export default {
 
 
 </script>
-
-
-<style>
-
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-.container{
-  width: 50%;
-  margin:auto ;
-  text-align: center;
-}
-.row{
-  text-align : center;
-}
-.game-title{
-  font-size : 4rem;
-  font-family :monospace;
-}
-.gameover{
-  background-color : red;
-  opacity: 0.8;
-}
-</style>
