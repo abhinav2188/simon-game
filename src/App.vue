@@ -27,7 +27,7 @@
         </tr>
       </table>
 
-      <h1 v-if='isGameStarted' class="text-2xl text-white">  Score : {{score}}</h1>
+      <h1 v-if='isGameStarted & !isGameover' class="text-2xl text-white"> Score : {{score}}</h1>
 
     </div>
 
