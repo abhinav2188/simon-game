@@ -1,22 +1,20 @@
 <template lang="html">
-
-<div class="col">
-  <div :class="{'pressed':pressed}" :style="{'background-color' :color}" class="audio-btn" @click.prevent="buttonPressed()" >
-
+  <div class="col">
+    <div
+      :class="{ pressed: pressed }"
+      :style="{ 'background-color': color }"
+      class="md:w-32 md:h-32 w-24 h-24 rounded-lg shadow-lg"
+      @click.prevent="buttonPressed()"
+    ></div>
   </div>
-
-</div>
-
 </template>
 
 <script>
-
 export default {
-
   data: function() {
     return {
       pressed: false,
-    }
+    };
   },
 
   props: {
@@ -26,18 +24,14 @@ export default {
     },
     audioFile: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
 
   methods: {
-
     playSound: function() {
       var audio = new Audio(this.audioFile);
-      audio.play()
-      .catch(err =>
-        console.log("error playing audio" + err))
-
+      audio.play().catch((err) => console.log("error playing audio" + err));
     },
 
     flash: function() {
@@ -51,27 +45,16 @@ export default {
 
     buttonPressed: function() {
       this.flash();
-      this.$emit('buttonPressed', this.color);
-
-    }
-  }
-}
+      this.$emit("buttonPressed", this.color);
+    },
+  },
+};
 </script>
 
 <style lang="css" scoped>
 
-.audio-btn {
-  margin: 25px;
-  display: inline-block;
-  height: 150px;
-  width: 150px;
-  border: 2px solid black;
-  border-radius: 10%;
-}
-
 .pressed {
-  box-shadow: 0 0 25px white;
+  box-shadow: 0 0 25px black;
   /* background-color: grey; */
 }
-
 </style>
