@@ -3,12 +3,14 @@
     <div id="app" class="lg:w-2/3 md:w-3/4 w-11/12 mx-auto flex flex-col items-center text-center h-full relative">
       <button
         v-if="isGameStarted"
-        class="rounded md:p-2 p-1 md:text-sm text-xs bg-gray-900 text-white my-4 self-end"
+        class="rounded md:p-2 p-1 md:text-sm text-xs text-white my-4 self-end"
+        :class=" hintsCount<=0?'bg-gray-200':'bg-gray-900' "
         type="button"
         name="button"
         @click="displayHint()"
-      >
-        show hint
+        :disabled="hintsCount<=0"
+        >
+        hints <span class="text-xs bg-purple-600 rounded px-1">{{hintsCount}}</span>
       </button>
       <h1 class="lg:text-5xl md:text-3xl text-xl font-bold">{{ title }}</h1>
       <button v-if="!isGameStarted" class="rounded md:p-2 p-1 md:text-sm text-xs bg-gray-900 text-white" @click="startGame()">start game</button>
@@ -70,6 +72,7 @@ export default {
       buttonPressCount: -1,
       isGameover: false,
       score: 0,
+      hintsCount:3,
     };
   },
   methods: {
@@ -97,7 +100,7 @@ export default {
         "Gameover, Your Score : " + this.score;
       this.isGameover = true;
       this.score = 0;
-
+      this.hintsCount = 3;
       var audio = new Audio(
         "https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"
       );
@@ -147,6 +150,7 @@ export default {
       var self = this;
       var i = 0;
       var l = this.gameSequence.length;
+      if(self.hintsCount>0){
       var temp = setInterval(function () {
         if (i == l) {
           clearInterval(temp);
@@ -155,6 +159,9 @@ export default {
           i++;
         }
       }, 500);
+
+      }
+      --self.hintsCount;
     },
     startGame: function () {
       var self = this;
